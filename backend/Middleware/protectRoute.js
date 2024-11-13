@@ -13,9 +13,9 @@ export const protectRoute = async (req,res,next)=>{
         return res.status(400).json({error : "Unauthorized access : Invalid token "})
        }
        else{
-        const username = decoded.username;
-
-        const currentUser = await User.findOne({username}).select("-password")
+        const userID = decoded.currentUserId;
+        
+        const currentUser = await User.findById(userID).select("-password")
        
         if(!currentUser){
             return res.status(400).json({error : "User not found"})
@@ -26,7 +26,8 @@ export const protectRoute = async (req,res,next)=>{
         }
        }
     } catch (error) {
-        return res.send(error)
-        // return res.status(500).json({error : "Internal Server Error in protectRoute Middleware"})
+        // return res.send(error)
+        console.log(error)
+        return res.status(500).json({error : "Internal Server Error in protectRoute Middleware"})
     }
 }

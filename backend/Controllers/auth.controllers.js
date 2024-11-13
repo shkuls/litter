@@ -34,7 +34,8 @@ export const signup = async (req, res) => {
 
     if (newUser) {
         await newUser.save();
-        const token = jwt.sign({ username }, process.env.JWT_SECRET, {
+        const id = newUser._id
+        const token = jwt.sign({ id }, process.env.JWT_SECRET, {
             expiresIn: '15d'
         })
         res.cookie("jwt", token, {
@@ -60,11 +61,12 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
     const {username , password} = req.body;
     const currentUser = await User.findOne({username})
+    const currentUserId = currentUser._id;
     if(currentUser){
         const isPasswordValid = await bcrpyt.compare(password , currentUser?.password || "")
         if(isPasswordValid)
         {
-            const token = jwt.sign({ username }, process.env.JWT_SECRET, {
+            const token = jwt.sign({ currentUserId }, process.env.JWT_SECRET, {
                 expiresIn: '15d'
             })
             res.cookie("jwt", token, {
