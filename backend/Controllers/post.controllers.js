@@ -1,5 +1,6 @@
 import Post from "../Models/post.model.js";
 import User from "../Models/user.model.js";
+import Notification from "../Models/notification.model.js";
 import {v2 as cloudinary} from "cloudinary"
 export const createPost = async(req , res)=>{
     try {
@@ -48,6 +49,14 @@ try {
             //like the post
             await Post.findByIdAndUpdate(id,  {$push : {likes : currentUser._id}})
             await User.findByIdAndUpdate(currentUser._id , {$push : {likedPosts : id}})
+            const postUser = await Post.findById(id).select("user");
+            const notif = new Notification({
+                from: currentUser._id,
+                to: postUser,
+                type :"like",
+                
+            })
+            await notif.save();
             res.status(200).send({ msg: "Post liked Succesfully" })
 
         }
@@ -99,6 +108,13 @@ export const createComment = async(req , res)=>{
             const comment = {user:  userID , text }
             post.comments.push(comment)
             await post.save()
+            const notif = new Notification({
+                from: userID,
+                to: post.user,
+                type :"comment",
+                
+            })
+            await notif.save();
             res.status(200).send({msg : "Comment added successfully"})
             
 

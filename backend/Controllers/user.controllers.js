@@ -48,6 +48,7 @@ export const followUser = async (req , res) =>{
                 type :"follow",
                 
             })
+            await notif.save();
             res.status(200).send({message : "User unfollowed success"})
 
         }
@@ -180,12 +181,3 @@ export const updateUserProfile = async (req,res) => {
 }
 
 
-export const getLikedPosts = async (req,res) =>{
-    try {
-        const id = req.params.id;
-        
-    } catch (error) {
-        console.log(error)
-        res.status(500).send({error : "Error at getLikedPosts controller"})
-    }
-}
