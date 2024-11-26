@@ -7,7 +7,7 @@ import * as EmailValidator from 'email-validator';
 export const signup = async (req, res) => {
     const { fullName, username, email, password } = req.body;
     if(password.length < 6)
-    {
+    {console.log("Password should have atleast 6 characters")
         return res.status(400).send({ error: "Password should have atleast 6 characters" })
     }
     if (!EmailValidator.validate(email)) {
@@ -61,8 +61,8 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
     const {username , password} = req.body;
     const currentUser = await User.findOne({username})
-    const currentUserId = currentUser._id;
     if(currentUser){
+        const currentUserId = currentUser._id;
         const isPasswordValid = await bcrpyt.compare(password , currentUser?.password || "")
         if(isPasswordValid)
         {
@@ -98,6 +98,7 @@ export const login = async (req, res) => {
 }
 export const logout = async (req, res) => {
     try {
+        
         res.cookie("jwt" , "")
         res.status(200).send({data : "User Logged out"})
     } catch (error) {

@@ -7,7 +7,10 @@ import { v2 as cloudinary} from "cloudinary";
 import connectDB from "./DB/index.js";
 import cookieParser from "cookie-parser";
 import * as dotenv from 'dotenv';
+import cors from 'cors'
+
 dotenv.config({path : "../.env"});
+
 
 cloudinary.config({
     cloud_name : process.env.CLOUDINARY_NAME,
@@ -16,6 +19,7 @@ cloudinary.config({
 })
 
 const app = express()
+app.use(cors());
 app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: true }));
