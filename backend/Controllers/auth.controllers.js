@@ -38,6 +38,7 @@ export const signup = async (req, res) => {
         const token = jwt.sign({ id }, process.env.JWT_SECRET, {
             expiresIn: '15d'
         })
+        console.log(token)
         res.cookie("jwt", token, {
             maxAge: 15 * 24 * 60 * 60 * 100,
             httpOnly: true,
@@ -69,11 +70,14 @@ export const login = async (req, res) => {
             const token = jwt.sign({ currentUserId }, process.env.JWT_SECRET, {
                 expiresIn: '15d'
             })
+            console.log(token)
+            console.log("hi")
             res.cookie("jwt", token, {
                 maxAge: 15 * 24 * 60 * 60 * 100,
                 httpOnly: true,
                 sameSite: "strict",
-                secure: process.env.NODE_ENV !== "development"
+                secure: process.env.NODE_ENV !== "development" , 
+               
     
             })
             return res.status(200).send({
